@@ -49,7 +49,7 @@ public class FingerTest {
 
         // Loop
         long start = System.currentTimeMillis();
-        while (System.currentTimeMillis()-start < 60_000) {
+        while (System.currentTimeMillis()-start > -1) {// < 60_000) {
             // Rate limit
             Thread.sleep(50);
             // Get valid info
@@ -73,6 +73,7 @@ public class FingerTest {
     static void sendDataToArduinoAndWaitForAck(SerialPort arduinoPort, DataPacket data) {
         // Send the data packet
         String dataPacket = data.serialize();
+        System.out.println(dataPacket);
         byte[] dataBytes = dataPacket.getBytes();
         arduinoPort.writeBytes(dataBytes, dataBytes.length);
         arduinoPort.flushIOBuffers();
