@@ -3,11 +3,11 @@
 
 int servoPorts[5] = {3, 5, 6, 9, 10};
 double servoRanges[5][2] = {
-  {20, 140}, // thumb
+  {20, 180}, // thumb
   {20, 160}, // pointer
-  {20, 140}, // middle
-  {20, 140}, // ring
-  {20, 140}  // pinky
+  {20, 160}, // middle
+  {20, 160}, // ring
+  {20, 160}  // pinky
 };
 Servo servos[5];
 
@@ -43,7 +43,7 @@ void loop() {
     }
     // Control finger (or just light)
     for (int i = 0; i < 5; i++) {
-      if (i != 1) continue; // Only testing pointer finger
+//      if (i != 1) continue; // Only testing pointer finger
       double servoRotation = servoRanges[i][0] /* (min) */ + (servoRanges[i][1]-servoRanges[i][0]) /* (range) */ * fingerCurls[i];
       servos[i].write(servoRotation);
       if (fingerCurls[i] > 0.5) {
@@ -51,9 +51,9 @@ void loop() {
       } else {
         digitalWrite(LED_BUILTIN, LOW);
       }
-      // Respond w/ ack
-      Serial.write("ack");// + (char)(int)servoRotation);
-      Serial.flush();
     }
+    // Respond w/ ack
+    Serial.write("ack");// + (char)(int)servoRotation);
+    Serial.flush();
   }
 }

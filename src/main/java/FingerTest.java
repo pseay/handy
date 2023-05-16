@@ -1,6 +1,9 @@
 import com.fazecast.jSerialComm.*;
 import com.leapmotion.leap.*;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class FingerTest {
 
     public static double curl(Finger fingey) {
@@ -51,18 +54,24 @@ public class FingerTest {
         long start = System.currentTimeMillis();
         while (System.currentTimeMillis()-start > -1) {// < 60_000) {
             // Rate limit
-            Thread.sleep(50);
+            Thread.sleep(5);
             // Get valid info
             Frame frame = c.frame();
             Hand hand = frame.hands().rightmost();
-            Finger fingey = hand.fingers().get(1);
-            if (!fingey.isValid()) {
+            Finger[] fingeys = new Finger[5];
+            for (int i = 0; i < 5; i++) {
+                fingeys[i] = hand.fingers().get(i);
+            }
+            if (Arrays.stream(fingeys).anyMatch(f -> !f.isValid())) {
+                // invalid finger
                 continue;
             }
             // Use hand data
-            double f_curl = curl(fingey);
-            System.out.println("curl: " + f_curl);
-            DataPacket data = new DataPacket(f_curl);
+            Double[] fingeyCurls = new Double[5];
+            AtomicInteger i = new AtomicInteger();
+            Arrays.stream(fingeys).map(FingerTest::curl).forEach(aDouble -> fingeyCurls[i.getAndIncrement()] = aDouble);
+            // Send hand data
+            DataPacket data = new DataPacket(fingeyCurls);
             sendDataToArduinoAndWaitForAck(arduinoPort, data);
         }
 
