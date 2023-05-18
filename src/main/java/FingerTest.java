@@ -2,9 +2,12 @@ import com.fazecast.jSerialComm.*;
 import com.leapmotion.leap.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FingerTest {
+
+    public static HashMap<Finger.Type, Double> maxValue = new HashMap<>();
 
     public static double curl(Finger fingey) {
         Vector far = fingey.jointPosition(Finger.Joint.JOINT_DIP);//doesn't exist on thumb
@@ -17,6 +20,13 @@ public class FingerTest {
         Vector closeSegmentVector = medium.minus(close);
         double dot = middleSegmentVector.dot(closeSegmentVector);
         double angle = 180*Math.acos(dot/(middleSegmentVector.magnitude()*closeSegmentVector.magnitude()))/Math.PI;
+        // Scale range to [0, 90]
+        Double max = maxValue.get(fingey.type());
+        if (max == null || angle > max) {
+            maxValue.put(fingey.type(), max = angle);
+        }
+        System.out.println(fingey.type() + ": " + maxValue.get(fingey.type()));
+        angle *= (90/max);
         return angle;
     }
 

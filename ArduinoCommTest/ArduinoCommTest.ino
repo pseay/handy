@@ -3,7 +3,7 @@
 
 int servoPorts[5] = {3, 5, 6, 9, 10};
 double servoRanges[5][2] = {
-  {20, 180}, // thumb
+  {20, 160}, // thumb
   {20, 160}, // pointer
   {20, 160}, // middle
   {20, 160}, // ring
