@@ -25,7 +25,6 @@ public class FingerTest {
         if (max == null || angle > max) {
             maxValue.put(fingey.type(), max = angle);
         }
-        System.out.println(fingey.type() + ": " + maxValue.get(fingey.type()));
         angle *= (90/max);
         return angle;
     }

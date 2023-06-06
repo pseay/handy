@@ -3,7 +3,7 @@
 
 int servoPorts[5] = {3, 5, 6, 9, 10};
 double servoRanges[5][2] = {
-  {20, 160}, // thumb
+  {45, 135}, // thumb
   {20, 160}, // pointer
   {20, 160}, // middle
   {20, 160}, // ring
@@ -39,7 +39,7 @@ void loop() {
     }
     // Normalize the data
     for (int i = 0; i < 5; i++) {
-      fingerCurls[i] = max(0, min(90, fingerCurls[i]))/90.0; // [0, 1]
+      fingerCurls[i] = 1.0-(max(0, min(90, fingerCurls[i]))/90.0); // [0, 1]
     }
     // Control finger (or just light)
     for (int i = 0; i < 5; i++) {
